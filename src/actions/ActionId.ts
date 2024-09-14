@@ -17,6 +17,7 @@ export enum ActionId {
 	USKDVEProperties = 'uskDveProperties',
 	USKDVEPropertiesVariables = 'uskDvePropertiesVariables',
 	USKSetKeyframe = 'uskSetKeyframe',
+	USKSetKeyframeVariables = 'uskSetKeyframeVariables',
 	USKStoreKeyframe = 'uskStoreKeyframe',
 	USKFlyInfinite = 'uskFlyInfinite',
 	DSKSource = 'dskSource',
