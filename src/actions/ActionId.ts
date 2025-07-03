@@ -18,11 +18,10 @@ export enum ActionId {
 	USKFlyKeyLumaChromaPatternVariables = 'uskFlyKeyLumaChromaPatternVariables',
 	USKDVEProperties = 'uskDveProperties',
 	USKDVEPropertiesVariables = 'uskDvePropertiesVariables',
-
 	USKPatternProperties = 'uskPatternProperties',
 	USKPatternPropertiesVariables = 'uskPatternPropertiesVariables',
-
 	USKSetKeyframe = 'uskSetKeyframe',
+	USKSetKeyframeVariables = 'uskSetKeyframeVariables',
 	USKStoreKeyframe = 'uskStoreKeyframe',
 	USKFlyInfinite = 'uskFlyInfinite',
 	DSKSource = 'dskSource',
