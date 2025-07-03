@@ -13,7 +13,7 @@ import { createMacroActions, type AtemMacroActions } from './macro.js'
 import { createStreamingActions, type AtemStreamingActions } from './streaming.js'
 import { createRecordingActions, type AtemRecordingActions } from './recording.js'
 import { createDownstreamKeyerActions, type AtemDownstreamKeyerActions } from './dsk.js'
-import { createAuxOutputActions, type AtemAuxOutputActions } from './aux.js'
+import { createAuxOutputActions, type AtemAuxOutputActions } from './aux-outputs.js'
 import { createMultiviewerActions, type AtemMultiviewerActions } from './multiviewer.js'
 import { createMediaPlayerActions, type AtemMediaPlayerActions } from './mediaPlayer.js'
 import { createSettingsActions, type AtemSettingsActions } from './settings.js'
@@ -24,6 +24,10 @@ import {
 } from './mixeffect/upstreamKeyerCommon.js'
 import { createFadeToBlackActions, type AtemFadeToBlackActions } from './mixeffect/fadeToBlack.js'
 import { createUpstreamKeyerDVEActions, type AtemUpstreamKeyerDVEActions } from './mixeffect/upstreamKeyerDVE.js'
+import {
+	createUpstreamKeyerPatternActions,
+	type AtemUpstreamKeyerPatternActions,
+} from './mixeffect/upstreamKeyerPattern.js'
 import { createClassicAudioActions, type AtemClassicAudioActions } from './classicAudio.js'
 import { createFairlightAudioActions, type AtemFairlightAudioActions } from './fairlightAudio.js'
 import type { MyActionDefinition } from './types.js'
@@ -34,11 +38,13 @@ import { createCameraControlDisplayActions, type AtemCameraControlDisplayActions
 import { createCameraControlVideoActions, type AtemCameraControlVideoActions } from './cameraControl/video.js'
 import { createCameraControlColorActions, type AtemCameraControlColorActions } from './cameraControl/color.js'
 import { createTimecodeActions, type AtemTimecodeActions } from './timecode.js'
+import { createCameraControlMediaActions } from './cameraControl/media.js'
 
 export type ActionTypes = AtemProgramPreviewActions &
 	AtemTransitionActions &
 	AtemUpstreamKeyerCommonActions &
 	AtemUpstreamKeyerDVEActions &
+	AtemUpstreamKeyerPatternActions &
 	AtemFadeToBlackActions &
 	AtemDownstreamKeyerActions &
 	AtemMacroActions &
@@ -70,12 +76,13 @@ export function GetActionsList(
 		...createProgramPreviewActions(atem, model, transitions, state),
 		...createTransitionActions(instance, atem, model, commandBatching, state),
 		...createUpstreamKeyerCommonActions(atem, model, state),
-		...createUpstreamKeyerDVEActions(atem, model, state),
+		...createUpstreamKeyerDVEActions(atem, model, transitions, state),
+		...createUpstreamKeyerPatternActions(atem, model, state),
 		...createFadeToBlackActions(atem, model, state),
 
 		...createDownstreamKeyerActions(atem, model, state),
 		...createMacroActions(atem, model, state),
-		...createSuperSourceActions(atem, model, state),
+		...createSuperSourceActions(atem, model, transitions, state),
 		...createStreamingActions(atem, model, state),
 		...createRecordingActions(atem, model, state),
 
@@ -91,6 +98,7 @@ export function GetActionsList(
 
 		...createCameraControlLensActions(instance.config, atem, state),
 		...createCameraControlDisplayActions(instance.config, atem, state),
+		...createCameraControlMediaActions(instance.config, model, atem, state),
 		...createCameraControlVideoActions(instance.config, atem, state),
 		...createCameraControlColorActions(instance.config, atem, state),
 

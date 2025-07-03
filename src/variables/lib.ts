@@ -13,7 +13,7 @@ import {
 	getUSK,
 	type StateWrapper,
 } from '../state.js'
-import { assertUnreachable, formatAudioRoutingAsString, type InstanceBaseExt } from '../util.js'
+import { assertUnreachable, CLASSIC_AUDIO_MIN_GAIN, formatAudioRoutingAsString, type InstanceBaseExt } from '../util.js'
 import type { CompanionVariableDefinition, CompanionVariableValues } from '@companion-module/base'
 import { initCameraControlVariables, updateCameraControlVariables } from './cameraControl.js'
 import { createEmptyState } from '@atem-connection/camera-control'
@@ -161,6 +161,22 @@ function updateUSKVariable(
 		values[`usk_${meIndex + 1}_${keyIndex + 1}_bordEnabled`] = dveSettings.borderEnabled
 		values[`usk_${meIndex + 1}_${keyIndex + 1}_shadowEnabled`] = dveSettings.shadowEnabled
 		values[`usk_${meIndex + 1}_${keyIndex + 1}_rate`] = dveSettings.rate
+	}
+	const patternSettings = state.video.mixEffects[meIndex]?.upstreamKeyers[keyIndex]?.patternSettings
+	if (patternSettings) {
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_pattern_style`] = patternSettings.style
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_pattern_size`] = patternSettings.size / 100
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_pattern_symmetry`] = patternSettings.symmetry / 100
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_pattern_softness`] = patternSettings.softness / 100
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_pattern_positionX`] = patternSettings.positionX / 10000
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_pattern_positionY`] = patternSettings.positionY / 10000
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_pattern_invert`] = patternSettings.invert
+	}
+	if (state.video.mixEffects[meIndex]?.upstreamKeyers[keyIndex]) {
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_canFlyKey`] =
+			state.video.mixEffects[meIndex]?.upstreamKeyers[keyIndex]?.canFlyKey
+		values[`usk_${meIndex + 1}_${keyIndex + 1}_flyEnabled`] =
+			state.video.mixEffects[meIndex]?.upstreamKeyers[keyIndex]?.flyEnabled
 	}
 }
 function updateDSKVariable(
@@ -343,8 +359,10 @@ function updateClassicAudioVariables(
 	values: CompanionVariableValues,
 ): void {
 	const channel = getClassicAudioInput(state, classicAudioIndex)
+	const gain = channel && channel.gain <= CLASSIC_AUDIO_MIN_GAIN ? -Infinity : channel?.gain
+
 	values[`audio_input_${classicAudioIndex}_balance`] = formatAudioProperty(channel?.balance, 1)
-	values[`audio_input_${classicAudioIndex}_gain`] = formatAudioProperty(channel?.gain, 1)
+	values[`audio_input_${classicAudioIndex}_gain`] = formatAudioProperty(gain, 1)
 	values[`audio_input_${classicAudioIndex}_mixOption`] = formatAudioMixOption(channel?.mixOption)
 }
 
@@ -534,6 +552,42 @@ export function InitVariables(instance: InstanceBaseExt<AtemConfig>, model: Mode
 				variables.push({
 					name: `Keyframe transformation Rate of M/E ${i + 1} Key ${k + 1}`,
 					variableId: `usk_${i + 1}_${k + 1}_rate`,
+				})
+				variables.push({
+					name: `Pattern Style of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_pattern_style`,
+				})
+				variables.push({
+					name: `Pattern Size of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_pattern_size`,
+				})
+				variables.push({
+					name: `Pattern Symmetry of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_pattern_symmetry`,
+				})
+				variables.push({
+					name: `Pattern Softness of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_pattern_softness`,
+				})
+				variables.push({
+					name: `Pattern Position X of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_pattern_positionX`,
+				})
+				variables.push({
+					name: `Pattern Position Y of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_pattern_positionY`,
+				})
+				variables.push({
+					name: `Pattern Invert of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_pattern_invert`,
+				})
+				variables.push({
+					name: `(read only) Ability to Enable Fly Key or DVE of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_canFlyKey`,
+				})
+				variables.push({
+					name: `Fly Key Enable Status of M/E ${i + 1} Key ${k + 1}`,
+					variableId: `usk_${i + 1}_${k + 1}_flyEnabled`,
 				})
 			}
 
@@ -891,6 +945,10 @@ export function InitVariables(instance: InstanceBaseExt<AtemConfig>, model: Mode
 		variables.push({
 			name: `Timecode`,
 			variableId: `timecode`,
+		})
+		variables.push({
+			name: `Display Clock`,
+			variableId: `display_clock`,
 		})
 		updateTimecodeVariables(instance, state.state, values)
 	}

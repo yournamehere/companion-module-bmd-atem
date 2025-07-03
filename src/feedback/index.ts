@@ -10,7 +10,7 @@ import { createMediaPlayerFeedbacks, type AtemMediaPlayerFeedbacks } from './med
 import type { MyFeedbackDefinition } from './types.js'
 import { createMultiviewerFeedbacks, type AtemMultiviewerFeedbacks } from './multiviewer.js'
 import { createMacroFeedbacks, type AtemMacroFeedbacks } from './macro.js'
-import { createAuxOutputFeedbacks, type AtemAuxOutputFeedbacks } from './aux.js'
+import { createAuxOutputFeedbacks, type AtemAuxOutputFeedbacks } from './aux-outputs.js'
 import { createRecordingFeedbacks, type AtemRecordingFeedbacks } from './recording.js'
 import { createStreamingFeedbacks, type AtemStreamingFeedbacks } from './streaming.js'
 import { createDownstreamKeyerFeedbacks, type AtemDownstreamKeyerFeedbacks } from './dsk.js'
@@ -22,6 +22,7 @@ import { createFairlightAudioFeedbacks, type AtemFairlightAudioFeedbacks } from 
 import { FeedbackId } from './FeedbackId.js'
 import { createTimecodeFeedbacks, type AtemTimecodeFeedbacks } from './timecode.js'
 import type { AtemConfig } from '../config.js'
+import { createMediaPoolFeedbacks, type AtemMediaPoolFeedbacks } from './mediaPool.js'
 
 export type FeedbackTypes = AtemTallyFeedbacks &
 	AtemPreviewFeedbacks &
@@ -39,6 +40,7 @@ export type FeedbackTypes = AtemTallyFeedbacks &
 	AtemMacroFeedbacks &
 	AtemMultiviewerFeedbacks &
 	AtemMediaPlayerFeedbacks &
+	AtemMediaPoolFeedbacks &
 	AtemTimecodeFeedbacks
 
 export function GetFeedbacksList(
@@ -63,6 +65,7 @@ export function GetFeedbacksList(
 		...createMacroFeedbacks(model, state),
 		...createMultiviewerFeedbacks(model, state),
 		...createMediaPlayerFeedbacks(model, state),
+		...createMediaPoolFeedbacks(model, state),
 		...createTimecodeFeedbacks(config, model, state),
 	}
 

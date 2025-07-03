@@ -3,6 +3,8 @@ import { InstanceBase } from '@companion-module/base'
 import { AudioRoutingChannelsNames } from './choices.js'
 import { combineInputId } from './models/util/audioRouting.js'
 
+export const CLASSIC_AUDIO_MIN_GAIN = -60 // The minimum value to consider as valid for classic audio gain
+
 export const MEDIA_PLAYER_SOURCE_CLIP_OFFSET = 1000
 
 export function assertUnreachable(_never: never): void {
@@ -91,6 +93,7 @@ export interface IpAndPort {
 export interface InstanceBaseExt<TConfig> extends InstanceBase<TConfig> {
 	config: TConfig
 	timecodeSeconds: number
+	displayClockSeconds: number
 
 	parseIpAndPort(): IpAndPort | null
 }
@@ -122,7 +125,7 @@ export function parseAudioRoutingString(ids: string): number[] {
 		.filter((id): id is number => id !== null)
 }
 
-const ROUTING_STRING_REGEX = /(\d+)-([\d]+_[\d+])/i
+const ROUTING_STRING_REGEX = /(\d+)-([\d]+_[\d]+)/i
 export function parseAudioRoutingStringSingle(id: string): number | null {
 	id = id.trim()
 	if (!id) return null

@@ -23,6 +23,45 @@ To add a new model to the list:
 
 ## Changes
 
+## v3.18.0
+
+- Tweened transitions for DVE and SuperSource boxes
+
+## v3.17.0
+
+- Media pool previews
+- Add display counter variable
+- Support media filename in actions
+- Actions to offset display clock
+- Display clock value variable
+- More upstream key control
+- Fix audio routing variables updating
+
+## v3.16.1
+
+- Fix -infinite values with classic audio
+
+## v3.16.0
+
+- Add variables for upstream key DVE
+- Add action to update upstream key DVE with variables
+
+## v3.15.1
+
+- Fix audio routing for higher channel pairs
+
+## v3.15.0
+
+- Add camera control recording actions
+
+## v3.14.1 & v3.13.1
+
+- Refine audio routing support
+
+## v3.14.0
+
+- Tooling updates
+
 ## v3.13.0
 
 - Audio routing support
